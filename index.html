@@ -4,8 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Prezi Style Presentation 3D</title>
-    
-    <!-- Reveal.js CSS -->
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/black.min.css">
@@ -13,6 +12,44 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
 
+        /* ===== إلغاء خلفية الـ body ===== */
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: #000 !important;
+        }
+
+        /* ===== تأثير 3D float على خلفيات Reveal المدمجة ===== */
+        .reveal .slide-background.present .slide-background-content {
+            animation: bgFloat3D 10s ease-in-out infinite;
+            transform-origin: center center;
+        }
+
+        @keyframes bgFloat3D {
+            0%   { transform: scale(1.08) translate(0px, 0px); }
+            20%  { transform: scale(1.11) translate(-10px, -6px); }
+            40%  { transform: scale(1.09) translate(6px, -12px); }
+            60%  { transform: scale(1.12) translate(-6px, 8px); }
+            80%  { transform: scale(1.10) translate(10px, 4px); }
+            100% { transform: scale(1.08) translate(0px, 0px); }
+        }
+
+        /* ===== overlay داكن فوق كل خلفية ===== */
+        .reveal .slide-background::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(0,0,0,0.62) 0%,
+                rgba(0,0,0,0.38) 50%,
+                rgba(0,0,0,0.65) 100%
+            );
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* ===== إعدادات السلايدات ===== */
         .reveal .slides section {
             height: 100%;
             padding: 0;
@@ -20,165 +57,570 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            perspective: 1000px;
         }
-        .reveal .slides section img {
-            max-width: 100%;
-            max-height: 95vh;
+
+        /* ===== الصور الرئيسية داخل السلايدات ===== */
+        .reveal .slides section img.main-img {
+            width: calc(100% - 160px); /* مساحة لأزرار التنقل على الجانبين */
+            height: 100vh;
             object-fit: contain;
+            display: block;
             border: none;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            border-radius: 0;
+            margin: 0 auto;
+            padding: 0;
             background: transparent;
-            margin: 0;
-            border-radius: 15px;
             cursor: pointer;
-            transition: transform 0.4s ease-out;
+            transition: opacity 0.3s ease;
         }
-        
-        /* Map layout styles */
+
+        /* ===== الخريطة - السلايد الأول ===== */
+        .map-title {
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.35em;
+            font-weight: 700;
+            color: #fff;
+            background: rgba(0,0,0,0.65);
+            padding: 14px 28px;
+            border-radius: 18px;
+            margin-bottom: 22px;
+            text-shadow: 0 3px 10px rgba(0,0,0,0.9);
+            border: 1px solid rgba(255,255,255,0.12);
+            backdrop-filter: blur(6px);
+        }
+
         .map-container {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 20px;
-            width: 95%;
+            gap: 16px;
+            width: 93%;
             max-width: 1400px;
             margin: 0 auto;
-            padding: 30px;
-            background: rgba(0,0,0,0.5);
-            border-radius: 20px;
+            padding: 24px;
+            background: rgba(0,0,0,0.50);
+            border-radius: 22px;
+            border: 1px solid rgba(255,255,255,0.09);
+            backdrop-filter: blur(6px);
             transform-style: preserve-3d;
-            transform: perspective(1000px) rotateX(10deg);
+            transform: perspective(1000px) rotateX(8deg);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.75);
         }
-        
+
         .map-container img {
             width: 100%;
             height: auto;
             cursor: pointer;
-            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+            transition: all 0.45s cubic-bezier(0.25,0.8,0.25,1);
         }
-        
+
         .map-container img:hover {
-            transform: scale(1.15) translateZ(50px);
-            box-shadow: 0 20px 40px rgba(215, 103, 49, 0.6);
+            transform: scale(1.18) translateZ(60px);
+            box-shadow: 0 25px 50px rgba(215,103,49,0.7);
+            border-color: rgba(215,103,49,0.55);
             z-index: 10;
         }
 
-        .reveal .controls {
-            color: #d76731;
-        }
+        /* ===== أزرار ===== */
+        .reveal .controls { color: #d76731; }
 
         .return-btn {
             position: fixed;
             top: 20px;
             right: 20px;
             z-index: 100;
-            background: rgba(215, 103, 49, 0.8);
-            color: white;
+            background: rgba(215,103,49,0.85);
+            color: #fff;
             border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
+            padding: 10px 22px;
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 17px;
+            font-family: 'Cairo', sans-serif;
             display: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.6);
+            backdrop-filter: blur(6px);
             transition: all 0.3s;
         }
         .return-btn:hover {
-            background: rgba(215, 103, 49, 1);
-            transform: scale(1.05);
+            background: rgba(215,103,49,1);
+            transform: scale(1.06) translateY(-2px);
+            box-shadow: 0 10px 30px rgba(215,103,49,0.5);
         }
 
-        /* Splash Screen Overlay Animation */
+        /* ===== Splash Screen ===== */
         #splash-screen {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://i.pinimg.com/736x/2e/9c/08/2e9c087372181ccdfe62c63ffe04a05d.jpg') no-repeat center center;
-            background-size: cover;
+            inset: 0;
+            background: linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),
+                        url('frame_0177.jpg') no-repeat center center / cover;
             z-index: 99999;
             display: flex;
             align-items: center;
             justify-content: center;
-            animation: fadeOutSplash 1s ease 2.5s forwards; /* Fades out completely after 2.5s */
+            animation: fadeOutSplash 1s ease 2.5s forwards;
         }
         #splash-screen h1 {
-            color: #ffffff;
-            font-size: 6em;
+            color: #fff;
+            font-size: clamp(1.5rem, 8vw, 5.5em);
             font-family: 'Cairo', sans-serif;
             font-weight: 900;
             letter-spacing: 2px;
-            text-shadow: 0 5px 15px rgba(0,0,0,0.8), 0 10px 40px rgba(215, 103, 49, 0.9);
-            animation: zoomInSplash 2s ease forwards;
+            text-align: center;
+            white-space: nowrap;
+            text-shadow: 0 5px 15px rgba(0,0,0,1);
+            background: rgba(0,0,0,0.55);
+            padding: clamp(15px,3vw,20px) clamp(20px,5vw,60px);
+            border-radius: clamp(15px,4vw,25px);
+            border: 2px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(8px);
+            animation: elegantReveal 1.5s cubic-bezier(0.2,0.8,0.2,1) forwards;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 40px rgba(215,103,49,0.6);
+            max-width: 95vw;
+            box-sizing: border-box;
         }
-        @keyframes fadeOutSplash {
-            to { opacity: 0; visibility: hidden; }
+        @keyframes fadeOutSplash { to { opacity:0; visibility:hidden; } }
+        @keyframes elegantReveal {
+            0%   { transform:scale(0.5) translateY(50px); opacity:0; filter:blur(10px); }
+            100% { transform:scale(1) translateY(0);      opacity:1; filter:blur(0); }
         }
-        @keyframes zoomInSplash {
-            0% { transform: scale(0.3) translateY(100px); opacity: 0; }
-            40% { transform: scale(1.1) translateY(0); opacity: 1; }
-            100% { transform: scale(1) translateY(0); opacity: 1; }
+
+        /* ===== Custom 3D Zoom Transitions ===== */
+        .reveal .slides section[data-transition^="zoom-"] {
+            transition: transform 1.2s cubic-bezier(0.2,0.8,0.2,1), opacity 1.2s ease !important;
+        }
+        .reveal .slides section[data-transition="zoom-top"]            { transform-origin: top center; }
+        .reveal .slides section[data-transition="zoom-top"].future     { transform:scale(0.3); opacity:0; }
+        .reveal .slides section[data-transition="zoom-top"].past       { transform:scale(2);   opacity:0; }
+        .reveal .slides section[data-transition="zoom-top"].present    { transform:scale(1);   opacity:1; }
+
+        .reveal .slides section[data-transition="zoom-bottom"]         { transform-origin: bottom center; }
+        .reveal .slides section[data-transition="zoom-bottom"].future  { transform:scale(0.3); opacity:0; }
+        .reveal .slides section[data-transition="zoom-bottom"].past    { transform:scale(2);   opacity:0; }
+        .reveal .slides section[data-transition="zoom-bottom"].present { transform:scale(1);   opacity:1; }
+
+        .reveal .slides section[data-transition="zoom-right"]          { transform-origin: center right; }
+        .reveal .slides section[data-transition="zoom-right"].future   { transform:scale(0.3); opacity:0; }
+        .reveal .slides section[data-transition="zoom-right"].past     { transform:scale(2);   opacity:0; }
+        .reveal .slides section[data-transition="zoom-right"].present  { transform:scale(1);   opacity:1; }
+
+        .reveal .slides section[data-transition="zoom-left"]           { transform-origin: center left; }
+        .reveal .slides section[data-transition="zoom-left"].future    { transform:scale(0.3); opacity:0; }
+        .reveal .slides section[data-transition="zoom-left"].past      { transform:scale(2);   opacity:0; }
+        .reveal .slides section[data-transition="zoom-left"].present   { transform:scale(1);   opacity:1; }
+
+        .reveal .slides section[data-transition="zoom-rotate-right"].future  { transform:scale(0.3) rotate(45deg);  opacity:0; }
+        .reveal .slides section[data-transition="zoom-rotate-right"].past    { transform:scale(2)   rotate(-45deg); opacity:0; }
+        .reveal .slides section[data-transition="zoom-rotate-right"].present { transform:scale(1)   rotate(0);      opacity:1; }
+
+        .reveal .slides section[data-transition="zoom-rotate-left"].future   { transform:scale(0.3) rotate(-45deg); opacity:0; }
+        .reveal .slides section[data-transition="zoom-rotate-left"].past     { transform:scale(2)   rotate(45deg);  opacity:0; }
+        .reveal .slides section[data-transition="zoom-rotate-left"].present  { transform:scale(1)   rotate(0);      opacity:1; }
+
+        /* ===== أزرار التنقل السابق / التالي ===== */
+        .nav-btn {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 200;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            color: #fff;
+            background: rgba(215,103,49,0.22);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow:
+                0 8px 32px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.15),
+                0 0 0 1px rgba(215,103,49,0.35);
+            transition: all 0.3s cubic-bezier(0.25,0.8,0.25,1);
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .nav-btn:hover {
+            background: rgba(215,103,49,0.75);
+            transform: translateY(-50%) scale(1.12);
+            box-shadow:
+                0 16px 48px rgba(215,103,49,0.45),
+                inset 0 1px 0 rgba(255,255,255,0.2),
+                0 0 0 1px rgba(215,103,49,0.7);
+        }
+        .nav-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+        #nav-prev { left: 18px; }
+        #nav-next { right: 18px; }
+
+        /* ===== عداد السلايدات ===== */
+        #slide-counter {
+            position: fixed;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            flex-wrap: nowrap;
+            gap: 8px;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 10px 22px;
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            white-space: nowrap;
+        }
+        .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            min-width: 10px;
+            min-height: 10px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.35);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .dot.active {
+            background: #d76731;
+            width: 26px;
+            min-width: 26px;
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(215,103,49,0.8);
+        }
+        .dot:hover:not(.active) {
+            background: rgba(255,255,255,0.7);
+            transform: scale(1.3);
+        }
+
+        /* ===== تلميح السحب باللمس ===== */
+        #swipe-hint {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.6);
+            font-family: 'Cairo', sans-serif;
+            font-size: 13px;
+            pointer-events: none;
+            animation: hintFade 3s ease 3.5s forwards;
+            opacity: 0;
+        }
+        #swipe-hint svg { animation: swipeAnim 1.5s ease-in-out infinite; }
+        @keyframes hintFade {
+            0%   { opacity:0; }
+            15%  { opacity:1; }
+            80%  { opacity:1; }
+            100% { opacity:0; visibility:hidden; }
+        }
+        @keyframes swipeAnim {
+            0%,100% { transform: translateX(0); }
+            50%      { transform: translateX(10px); }
+        }
+
+        /* ===== Responsive — Tablet (≤1024px) ===== */
+        @media (max-width:1024px) {
+            .map-container {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 14px;
+                padding: 18px;
+                transform: perspective(800px) rotateX(6deg);
+            }
+            .map-title { font-size: 1.15em; padding: 12px 22px; }
+        }
+
+        /* ===== Responsive — Mobile Landscape / Small Tablet (≤768px) ===== */
+        @media (max-width:768px) {
+            /* الخريطة */
+            .map-container {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+                padding: 14px;
+                transform: perspective(700px) rotateX(5deg);
+                border-radius: 16px;
+            }
+            .map-title {
+                font-size: 1em;
+                padding: 10px 18px;
+                margin-bottom: 14px;
+                border-radius: 14px;
+            }
+
+            /* صورة السلايد على موبايل أفقي */
+            .reveal .slides section img.main-img {
+                width: calc(100% - 110px); /* مساحة لأزرار الجانبين */
+                height: calc(100vh - 90px); /* مساحة لشريط النقاط وزر العودة */
+                margin: 45px auto 45px;
+                border-radius: 10px;
+            }
+
+            /* أزرار التنقل */
+            .nav-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 20px;
+                background: rgba(215,103,49,0.30);
+            }
+            #nav-prev { left: 8px; }
+            #nav-next { right: 8px; }
+
+            /* زر العودة */
+            .return-btn {
+                font-size: 13px;
+                padding: 8px 14px;
+                top: 10px;
+                right: 10px;
+                border-radius: 10px;
+            }
+
+            /* نقاط العداد */
+            #slide-counter {
+                bottom: 14px;
+                padding: 7px 14px;
+                gap: 6px;
+            }
+            .dot { width: 8px; height: 8px; min-width: 8px; min-height: 8px; }
+            .dot.active { width: 20px; min-width: 20px; }
+
+            /* تلميح اللمس */
+            #swipe-hint { bottom: 60px; font-size: 12px; }
+        }
+
+        /* ===== Responsive — Mobile Portrait (≤480px) ===== */
+        @media (max-width:480px) {
+            /* الخريطة عمودين */
+            .map-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+                padding: 12px;
+                transform: none;
+                border-radius: 14px;
+            }
+            .map-title {
+                font-size: 0.9em;
+                padding: 9px 16px;
+                margin-bottom: 12px;
+                white-space: normal;
+                text-align: center;
+            }
+
+            /* صورة السلايد — تملأ كامل الشاشة مع مساحة للنقاط */
+            .reveal .slides section img.main-img {
+                width: calc(100% - 90px); /* مساحة أزرار الجانبين */
+                height: calc(100dvh - 80px);
+                margin: 40px auto;
+                border-radius: 12px;
+                box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+            }
+
+            /* أزرار التنقل — أصغر وشبه شفافة */
+            .nav-btn {
+                width: 38px;
+                height: 38px;
+                font-size: 18px;
+                background: rgba(215,103,49,0.20);
+                box-shadow: 0 4px 16px rgba(0,0,0,0.4),
+                            0 0 0 1px rgba(215,103,49,0.25);
+            }
+            #nav-prev { left: 4px; }
+            #nav-next { right: 4px; }
+
+            /* زر العودة */
+            .return-btn {
+                font-size: 12px;
+                padding: 7px 12px;
+                top: 8px;
+                right: 8px;
+            }
+
+            /* نقاط أصغر */
+            #slide-counter {
+                bottom: 10px;
+                padding: 6px 12px;
+                gap: 5px;
+            }
+            .dot { width: 7px; height: 7px; min-width: 7px; min-height: 7px; }
+            .dot.active { width: 18px; min-width: 18px; }
+        }
+
+        /* ===== Responsive — Very Small (≤360px) ===== */
+        @media (max-width:360px) {
+            .map-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 6px;
+                padding: 10px;
+            }
+            .map-title { font-size: 0.82em; padding: 8px 12px; }
+            .nav-btn { width: 34px; height: 34px; font-size: 16px; }
+            .reveal .slides section img.main-img {
+                width: calc(100% - 78px);
+                height: calc(100dvh - 70px);
+                margin: 35px auto;
+            }
+            .dot { width: 6px; height: 6px; min-width: 6px; min-height: 6px; }
+            .dot.active { width: 16px; min-width: 16px; }
         }
     </style>
 </head>
 <body>
 
-<!-- Animated Splash Screen -->
+<!-- Splash Screen -->
 <div id="splash-screen">
     <h1>بداية الرحلة</h1>
 </div>
 
-<button class="return-btn" onclick="Reveal.slide(0)">🗺️ العودة للخريطة</button>
+<!-- زر العودة للخريطة -->
+<button class="return-btn" id="return-btn" onclick="Reveal.slide(0)">⬡ الخريطة</button>
+
+<!-- أزرار التنقل السابق / التالي -->
+<button class="nav-btn" id="nav-prev" onclick="Reveal.prev()" title="السابق">&#8592;</button>
+<button class="nav-btn" id="nav-next" onclick="Reveal.next()" title="التالي">&#8594;</button>
+
+<!-- عداد السلايدات بنقاط -->
+<div id="slide-counter">
+    <button class="dot" onclick="Reveal.slide(1)"></button>
+    <button class="dot" onclick="Reveal.slide(2)"></button>
+    <button class="dot" onclick="Reveal.slide(3)"></button>
+    <button class="dot" onclick="Reveal.slide(4)"></button>
+    <button class="dot" onclick="Reveal.slide(5)"></button>
+    <button class="dot" onclick="Reveal.slide(6)"></button>
+    <button class="dot" onclick="Reveal.slide(7)"></button>
+    <button class="dot" onclick="Reveal.slide(8)"></button>
+    <button class="dot" onclick="Reveal.slide(9)"></button>
+    <button class="dot" onclick="Reveal.slide(10)"></button>
+</div>
+
+<!-- تلميح السحب باللمس -->
+<div id="swipe-hint">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+    </svg>
+    <span>اسحب للتنقل</span>
+</div>
 
 <div class="reveal">
     <div class="slides">
-        
-        <!-- Overview Map Slide -->
-        <section data-transition="zoom">
-            <h2 style="font-family: 'Cairo', sans-serif; font-size: 1.4em; font-weight: 700; color: #ffffff; background: rgba(0,0,0,0.6); padding: 15px 30px; border-radius: 20px; margin-bottom: 30px; text-shadow: 0 3px 10px rgba(0,0,0,0.9); transform: translateZ(20px); border: 1px solid rgba(255,255,255,0.1);">بداية الرحلة تحولت إلى تساؤل بحثي</h2>
+
+        <!-- SLIDE 0 - الخريطة | خلفية: frame_0177 ↔ frame_0177 -->
+        <section
+            data-transition="zoom"
+            data-background-image="frame_0177.jpg"
+            data-background-size="cover"
+            data-background-position="center">
+            <h2 class="map-title">بداية الرحلة تحولت إلى تساؤل بحثي</h2>
             <div class="map-container">
-                <img src="1.png" alt="Slide 1" onclick="Reveal.slide(1)" />
-                <img src="2.png" alt="Slide 2" onclick="Reveal.slide(2)" />
-                <img src="3.png" alt="Slide 3" onclick="Reveal.slide(3)" />
-                <img src="4.png" alt="Slide 4" onclick="Reveal.slide(4)" />
-                <img src="5.png" alt="Slide 5" onclick="Reveal.slide(5)" />
-                <img src="6.png" alt="Slide 6" onclick="Reveal.slide(6)" />
-                <img src="7.png" alt="Slide 7" onclick="Reveal.slide(7)" />
-                <img src="8.png" alt="Slide 8" onclick="Reveal.slide(8)" />
-                <img src="9.png" alt="Slide 9" onclick="Reveal.slide(9)" />
+                <img src="1.png"  alt="Slide 1"  onclick="Reveal.slide(1)" />
+                <img src="2.png"  alt="Slide 2"  onclick="Reveal.slide(2)" />
+                <img src="3.png"  alt="Slide 3"  onclick="Reveal.slide(3)" />
+                <img src="4.png"  alt="Slide 4"  onclick="Reveal.slide(4)" />
+                <img src="5.png"  alt="Slide 5"  onclick="Reveal.slide(5)" />
+                <img src="6.png"  alt="Slide 6"  onclick="Reveal.slide(6)" />
+                <img src="7.png"  alt="Slide 7"  onclick="Reveal.slide(7)" />
+                <img src="8.png"  alt="Slide 8"  onclick="Reveal.slide(8)" />
+                <img src="9.png"  alt="Slide 9"  onclick="Reveal.slide(9)" />
                 <img src="10.png" alt="Slide 10" onclick="Reveal.slide(10)" />
             </div>
         </section>
 
-        <!-- Individual Slides with Diverse Transitions -->
-        <section data-transition="zoom">
-            <img src="1.png" alt="Slide 1" onclick="Reveal.next()" />
+        <!-- SLIDE 1 | خلفية: frame_0212 -->
+        <section
+            data-transition="zoom-top"
+            data-background-image="frame_0212.jpg"
+            data-background-size="cover">
+            <img class="main-img" src="1.png" alt="Slide 1" onclick="Reveal.next()" />
         </section>
-        <section data-transition="convex">
-            <img src="2.png" alt="Slide 2" onclick="Reveal.next()" />
+
+        <!-- SLIDE 2 | خلفية: frame_0239 -->
+        <section
+            data-transition="zoom-bottom"
+            data-background-image="frame_0239.jpg"
+            data-background-size="cover">
+            <img class="main-img" src="2.png" alt="Slide 2" onclick="Reveal.next()" />
         </section>
-        <section data-transition="slide">
-            <img src="3.png" alt="Slide 3" onclick="Reveal.next()" />
+
+        <!-- SLIDE 3 | خلفية: frame_0020 -->
+        <section
+            data-transition="zoom-right"
+            data-background-image="frame_0020.jpg"
+            data-background-size="cover">
+            <img class="main-img" src="3.png" alt="Slide 3" onclick="Reveal.next()" />
         </section>
-        <section data-transition="concave">
-            <img src="4.png" alt="Slide 4" onclick="Reveal.next()" />
+
+        <!-- SLIDE 4 | خلفية: frame_0033 -->
+        <section
+            data-transition="zoom-left"
+            data-background-image="frame_0033.jpg"
+            data-background-size="cover">
+            <img class="main-img" src="4.png" alt="Slide 4" onclick="Reveal.next()" />
         </section>
-        <section data-transition="fade">
-            <img src="5.png" alt="Slide 5" onclick="Reveal.next()" />
+
+        <!-- SLIDE 5 | خلفية: frame_0044 -->
+        <section
+            data-transition="zoom-rotate-right"
+            data-background-image="frame_0044.jpg"
+            data-background-size="cover">
+            <img class="main-img" src="5.png" alt="Slide 5" onclick="Reveal.next()" />
         </section>
-        <section data-transition="convex">
-            <img src="6.png" alt="Slide 6" onclick="Reveal.next()" />
+
+        <!-- SLIDE 6 | خلفية: frame_0053 -->
+        <section
+            data-transition="zoom-rotate-left"
+            data-background-image="frame_0053.jpg"
+            data-background-size="cover">
+            <img class="main-img" src="6.png" alt="Slide 6" onclick="Reveal.next()" />
         </section>
-        <section data-transition="zoom">
-            <img src="7.png" alt="Slide 7" onclick="Reveal.next()" />
+
+        <!-- SLIDE 7 | خلفية: frame_0054 -->
+        <section
+            data-transition="zoom-top"
+            data-background-image="frame_0054.jpg"
+            data-background-size="cover">
+            <img class="main-img" src="7.png" alt="Slide 7" onclick="Reveal.next()" />
         </section>
-        <section data-transition="concave">
-            <img src="8.png" alt="Slide 8" onclick="Reveal.next()" />
+
+        <!-- SLIDE 8 | خلفية: frame_0068 -->
+        <section
+            data-transition="zoom-bottom"
+            data-background-image="frame_0068.jpg"
+            data-background-size="cover">
+            <img class="main-img" src="8.png" alt="Slide 8" onclick="Reveal.next()" />
         </section>
-        <section data-transition="slide">
-            <img src="9.png" alt="Slide 9" onclick="Reveal.next()" />
+
+        <!-- SLIDE 9 | خلفية: frame_0113 -->
+        <section
+            data-transition="zoom-rotate-right"
+            data-background-image="frame_0113.jpg"
+            data-background-size="cover">
+            <img class="main-img" src="9.png" alt="Slide 9" onclick="Reveal.next()" />
         </section>
-        <section data-transition="zoom">
-            <img src="10.png" alt="Slide 10" onclick="Reveal.slide(0)" />
+
+        <!-- SLIDE 10 | خلفية: frame_0177 -->
+        <section
+            data-transition="zoom"
+            data-background-image="frame_0177.jpg"
+            data-background-size="cover">
+            <img class="main-img" src="10.png" alt="Slide 10" onclick="Reveal.slide(0)" />
         </section>
 
     </div>
@@ -187,30 +629,112 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
 <script>
     Reveal.initialize({
-        controls: true,
-        progress: true,
-        center: true,
-        hash: true,
-        rtl: true,
-        touch: true, // Enable touch swipe
-        transition: 'convex', // Strong 3D default transition
-        transitionSpeed: 'slow',
-        
-        // Parallax Background Settings (Moves slightly with each slide)
-        parallaxBackgroundImage: 'bg.png', // The background image
-        parallaxBackgroundSize: '3000px 2000px', // Much larger than screen so it can move
-        parallaxBackgroundHorizontal: 150, // Move 150px horizontally between slides
-        parallaxBackgroundVertical: 50, // Move 50px vertically between slides
+        controls:             false,  // بنعمل أزرارنا الخاصة
+        progress:             true,
+        center:               true,
+        hash:                 true,
+        rtl:                  false,  // false عشان الكيبورد يشتغل صح
+        touch:                true,
+        keyboard:             false,  // false عشان نستخدم الـ keydown اليدوي بس (لو true بيتنفذ مرتين)
+        transition:           'zoom',
+        transitionSpeed:      'slow',
+        backgroundTransition: 'fade'
     });
 
-    // Show 'Return to map' button only when not on the map slide
-    Reveal.on('slidechanged', event => {
-        const btn = document.querySelector('.return-btn');
-        if(event.indexh === 0) {
-            btn.style.display = 'none';
-        } else {
-            btn.style.display = 'block';
+    // ===== تبديل خلفية السلايد الأول بين صورتين كل 3 ثوان =====
+    const slide0Bgs = ['frame_0177.jpg', 'frame_0177.jpg'];
+    let slide0Idx   = 0;
+
+    function swapSlide0Bg() {
+        slide0Idx = (slide0Idx + 1) % slide0Bgs.length;
+        // نأخذ عنصر الخلفية المدمج في Reveal للسلايد الأول
+        const bgEl = document.querySelector('.slide-background:first-child .slide-background-content');
+        if (bgEl) {
+            bgEl.style.transition      = 'background-image 0.8s ease';
+            bgEl.style.backgroundImage = `url('${slide0Bgs[slide0Idx]}')`;
         }
+    }
+    setInterval(swapSlide0Bg, 3000);
+
+    // ===== تحديث واجهة التنقل عند تغيير السلايد =====
+    const totalSlides = 10; // عدد السلايدات بدون الخريطة
+    const dots        = document.querySelectorAll('.dot');
+    const navPrev     = document.getElementById('nav-prev');
+    const navNext     = document.getElementById('nav-next');
+    const counter     = document.getElementById('slide-counter');
+    const returnBtn   = document.getElementById('return-btn');
+
+    function updateNav(idx) {
+        const onMap = idx === 0;
+
+        // زر العودة والأزرار السابق/التالي
+        returnBtn.style.display = onMap ? 'none' : 'block';
+        navPrev.style.display   = onMap ? 'none' : 'flex';
+        navNext.style.display   = onMap ? 'none' : 'flex';
+        counter.style.display   = onMap ? 'none' : 'flex';
+
+        // تعطيل زر السابق في الأول، والتالي في الأخير
+        navPrev.style.opacity   = idx <= 1             ? '0.3' : '1';
+        navNext.style.opacity   = idx >= totalSlides   ? '0.3' : '1';
+        navPrev.style.pointerEvents = idx <= 1           ? 'none' : 'auto';
+        navNext.style.pointerEvents = idx >= totalSlides ? 'none' : 'auto';
+
+        // تحديث النقاط
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx - 1));
+    }
+
+    Reveal.on('slidechanged', event => updateNav(event.indexh));
+    // تهيئة أولية
+    updateNav(0);
+
+    // ===== دعم اللمس والسحب (تعزيز فوق touch المدمج في Reveal) =====
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    document.addEventListener('touchstart', e => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    document.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        // تجاهل السحب العمودي
+        if (Math.abs(dx) < Math.abs(dy) || Math.abs(dx) < 40) return;
+        if (dx < 0) Reveal.next();  // سحب لليسار  → التالي
+        else        Reveal.prev();  // سحب لليمين → السابق
+    }, { passive: true });
+
+    // ===== أزرار لوحة المفاتيح (← سابق | → تالي | Space / Enter تالي) =====
+    document.addEventListener('keydown', e => {
+        switch (e.key) {
+            case 'ArrowRight':
+            case 'ArrowDown':
+                e.preventDefault();
+                Reveal.next();
+                break;
+            case 'ArrowLeft':
+            case 'ArrowUp':
+                e.preventDefault();
+                Reveal.prev();
+                break;
+            case ' ':
+            case 'Enter':
+                e.preventDefault();
+                Reveal.next();
+                break;
+            case 'Escape':
+                e.preventDefault();
+                Reveal.slide(0);
+                break;
+        }
+    });
+
+    // ===== Preload =====
+    ['frame_0177.jpg','frame_0212.jpg','frame_0239.jpg','frame_0020.jpg',
+     'frame_0033.jpg','frame_0044.jpg','frame_0053.jpg','frame_0054.jpg',
+     'frame_0068.jpg','frame_0113.jpg'].forEach(src => {
+        new Image().src = src;
     });
 </script>
 
