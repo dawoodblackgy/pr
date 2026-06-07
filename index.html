@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Prezi Style Presentation 3D</title>
+    
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/black.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+
+        .reveal .slides section {
+            height: 100%;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+        }
+        .reveal .slides section img {
+            max-width: 100%;
+            max-height: 95vh;
+            object-fit: contain;
+            border: none;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            background: transparent;
+            margin: 0;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.4s ease-out;
+        }
+        
+        /* Map layout styles */
+        .map-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            width: 95%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 20px;
+            transform-style: preserve-3d;
+            transform: perspective(1000px) rotateX(10deg);
+        }
+        
+        .map-container img {
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+        }
+        
+        .map-container img:hover {
+            transform: scale(1.15) translateZ(50px);
+            box-shadow: 0 20px 40px rgba(215, 103, 49, 0.6);
+            z-index: 10;
+        }
+
+        .reveal .controls {
+            color: #d76731;
+        }
+
+        .return-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(215, 103, 49, 0.8);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: all 0.3s;
+        }
+        .return-btn:hover {
+            background: rgba(215, 103, 49, 1);
+            transform: scale(1.05);
+        }
+
+        /* Splash Screen Overlay Animation */
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://i.pinimg.com/736x/2e/9c/08/2e9c087372181ccdfe62c63ffe04a05d.jpg') no-repeat center center;
+            background-size: cover;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeOutSplash 1s ease 2.5s forwards; /* Fades out completely after 2.5s */
+        }
+        #splash-screen h1 {
+            color: #ffffff;
+            font-size: 6em;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.8), 0 10px 40px rgba(215, 103, 49, 0.9);
+            animation: zoomInSplash 2s ease forwards;
+        }
+        @keyframes fadeOutSplash {
+            to { opacity: 0; visibility: hidden; }
+        }
+        @keyframes zoomInSplash {
+            0% { transform: scale(0.3) translateY(100px); opacity: 0; }
+            40% { transform: scale(1.1) translateY(0); opacity: 1; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Animated Splash Screen -->
+<div id="splash-screen">
+    <h1>بداية الرحلة</h1>
+</div>
+
+<button class="return-btn" onclick="Reveal.slide(0)">🗺️ العودة للخريطة</button>
+
+<div class="reveal">
+    <div class="slides">
+        
+        <!-- Overview Map Slide -->
+        <section data-transition="zoom">
+            <h2 style="font-family: 'Cairo', sans-serif; font-size: 1.4em; font-weight: 700; color: #ffffff; background: rgba(0,0,0,0.6); padding: 15px 30px; border-radius: 20px; margin-bottom: 30px; text-shadow: 0 3px 10px rgba(0,0,0,0.9); transform: translateZ(20px); border: 1px solid rgba(255,255,255,0.1);">بداية الرحلة تحولت إلى تساؤل بحثي</h2>
+            <div class="map-container">
+                <img src="1.png" alt="Slide 1" onclick="Reveal.slide(1)" />
+                <img src="2.png" alt="Slide 2" onclick="Reveal.slide(2)" />
+                <img src="3.png" alt="Slide 3" onclick="Reveal.slide(3)" />
+                <img src="4.png" alt="Slide 4" onclick="Reveal.slide(4)" />
+                <img src="5.png" alt="Slide 5" onclick="Reveal.slide(5)" />
+                <img src="6.png" alt="Slide 6" onclick="Reveal.slide(6)" />
+                <img src="7.png" alt="Slide 7" onclick="Reveal.slide(7)" />
+                <img src="8.png" alt="Slide 8" onclick="Reveal.slide(8)" />
+                <img src="9.png" alt="Slide 9" onclick="Reveal.slide(9)" />
+                <img src="10.png" alt="Slide 10" onclick="Reveal.slide(10)" />
+            </div>
+        </section>
+
+        <!-- Individual Slides with Diverse Transitions -->
+        <section data-transition="zoom">
+            <img src="1.png" alt="Slide 1" onclick="Reveal.next()" />
+        </section>
+        <section data-transition="convex">
+            <img src="2.png" alt="Slide 2" onclick="Reveal.next()" />
+        </section>
+        <section data-transition="slide">
+            <img src="3.png" alt="Slide 3" onclick="Reveal.next()" />
+        </section>
+        <section data-transition="concave">
+            <img src="4.png" alt="Slide 4" onclick="Reveal.next()" />
+        </section>
+        <section data-transition="fade">
+            <img src="5.png" alt="Slide 5" onclick="Reveal.next()" />
+        </section>
+        <section data-transition="convex">
+            <img src="6.png" alt="Slide 6" onclick="Reveal.next()" />
+        </section>
+        <section data-transition="zoom">
+            <img src="7.png" alt="Slide 7" onclick="Reveal.next()" />
+        </section>
+        <section data-transition="concave">
+            <img src="8.png" alt="Slide 8" onclick="Reveal.next()" />
+        </section>
+        <section data-transition="slide">
+            <img src="9.png" alt="Slide 9" onclick="Reveal.next()" />
+        </section>
+        <section data-transition="zoom">
+            <img src="10.png" alt="Slide 10" onclick="Reveal.slide(0)" />
+        </section>
+
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+<script>
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        center: true,
+        hash: true,
+        rtl: true,
+        touch: true, // Enable touch swipe
+        transition: 'convex', // Strong 3D default transition
+        transitionSpeed: 'slow',
+        
+        // Parallax Background Settings (Moves slightly with each slide)
+        parallaxBackgroundImage: 'bg.png', // The background image
+        parallaxBackgroundSize: '3000px 2000px', // Much larger than screen so it can move
+        parallaxBackgroundHorizontal: 150, // Move 150px horizontally between slides
+        parallaxBackgroundVertical: 50, // Move 50px vertically between slides
+    });
+
+    // Show 'Return to map' button only when not on the map slide
+    Reveal.on('slidechanged', event => {
+        const btn = document.querySelector('.return-btn');
+        if(event.indexh === 0) {
+            btn.style.display = 'none';
+        } else {
+            btn.style.display = 'block';
+        }
+    });
+</script>
+
+</body>
+</html>
